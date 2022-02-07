@@ -10,10 +10,11 @@ pygame.display.set_caption("Client")
 
 
 def redrawWindow(win, players):
-    win.fill((128,128,128))
+    win.fill((128, 128, 128))
     for player in players:
         player.draw(win)
     pygame.display.update()
+
 
 def main():
     run = True

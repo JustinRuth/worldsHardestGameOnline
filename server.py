@@ -4,11 +4,16 @@ import pickle
 from player import Player
 import random
 
-server = "192.168.1.10"
+# Gets the Users IP (For temp use only)
+hostname = socket.gethostname()
+server = socket.gethostbyname(hostname)
+
+# server = "66.71.99.2"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+# Binds the server to a port
 try:
     s.bind((server, port))
 except socket.error as e:
@@ -21,10 +26,13 @@ players = []
 
 
 def make_new_player(cp):
-    players.append(Player(random.randint(0, 100)*4, random.randint(0, 100)*4, 50, 50, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
+    """Makes a new player object at random position with a random color"""
+    players.append(Player(random.randint(0, 100) * 4, random.randint(0, 100) * 4, 50, 50,
+                          (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
 
 
 def get_player(id):
+    """Gets the index of a player with a certain id from players"""
     try:
         for index, item in enumerate(players):
             if item.current_player == id:
@@ -34,6 +42,7 @@ def get_player(id):
 
 
 def threaded_client(conn, id):
+    """Main loop that sends and receives data for the players"""
     player = get_player(id)
     conn.send(pickle.dumps(players[player]))
 
@@ -50,8 +59,8 @@ def threaded_client(conn, id):
             else:
                 reply = players
 
-                #print("Received: ", data)
-                #print("Sending: ", reply)
+                # print("Received: ", data)
+                # print("Sending: ", reply)
 
             conn.sendall(pickle.dumps(reply))
         except:
@@ -60,6 +69,7 @@ def threaded_client(conn, id):
     print("Lost connection")
     players.pop(get_player(id))
     conn.close()
+
 
 current_player = 0
 while True:

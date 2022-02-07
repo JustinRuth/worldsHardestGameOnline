@@ -1,21 +1,28 @@
 import pygame
-from game import Game
-from player import Player
+from player2 import Player
 
 width = 500
 height = 500
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 
-def redrawWindow(win, player):
-    win.fill((128,128,128))
+
+def redrawWindow(win, player, objects):
+    win.fill((128, 128, 128))
     player.draw(win)
+    for object in objects:
+        pygame.draw.rect(win, object[1], object[0])
     pygame.display.update()
 
+
 def main():
-
-
-    player = Player(100, 100, 50, 50, (0, 255, 0), 0)
+    player = Player(150, 100, 50, 50, (0, 255, 0), 0)
+    wall1 = (pygame.Rect(0, 0, 50, 1000), (0, 0, 0))
+    wall2 = (pygame.Rect(450, 0, 50, 1000), (0, 0, 0))
+    wall3 = (pygame.Rect(0, 0, 1000, 50), (0, 0, 0))
+    wall4 = (pygame.Rect(0, 450, 1000, 50), (0, 0, 0))
+    wall5 = (pygame.Rect(100, 350, 1000, 50), (0, 0, 0))
+    objects = [wall1, wall2, wall3, wall4, wall5]
     clock = pygame.time.Clock()
 
     while True:
@@ -26,8 +33,8 @@ def main():
                 run = False
                 pygame.quit()
 
-        player.move()
-        redrawWindow(win, player)
+        player.move(objects)
+        redrawWindow(win, player, objects)
 
 
 main()

@@ -1,7 +1,9 @@
 import pygame
 
-class Player():
+
+class Player:
     def __init__(self, x, y, width, height, color, cp):
+        """Initializes Player with given values"""
         self.x = x
         self.y = y
         self.width = width
@@ -12,9 +14,11 @@ class Player():
         self.current_player = cp
 
     def draw(self, win):
+        """Draws Player object to Screen"""
         pygame.draw.rect(win, self.color, self.rect)
 
     def move(self):
+        """Detects Keyboard Input and Updates Player Position"""
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT]:
