@@ -16,6 +16,7 @@ def redrawWindow(win, player, objects):
 
 
 def main():
+    run = True
     player = Player(225, 225, 50, 50, (0, 255, 0), 0)
     wall1 = (pygame.Rect(0, 0, 50, 1000), (0, 0, 0))
     wall2 = (pygame.Rect(450, 0, 50, 1000), (0, 0, 0))
@@ -26,7 +27,7 @@ def main():
     objects = [wall1, wall2, wall3, wall4, wall5, wall6]
     clock = pygame.time.Clock()
 
-    while True:
+    while run:
         clock.tick(60)
 
         for event in pygame.event.get():

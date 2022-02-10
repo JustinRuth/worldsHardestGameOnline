@@ -1,8 +1,9 @@
 import socket
 from _thread import *
 import pickle
-from player import Player
+from player2 import Player
 import random
+import pygame
 
 # Gets the Users IP (For temp use only)
 hostname = socket.gethostname()
@@ -23,12 +24,21 @@ s.listen(2)
 print("Waiting for connection, Server Started")
 
 players = []
-
+walls = []
 
 def make_new_player(cp):
     """Makes a new player object at random position with a random color"""
-    players.append(Player(random.randint(0, 100) * 4, random.randint(0, 100) * 4, 50, 50,
-                          (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
+    players.append(Player(225, 225, 50, 50, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
+
+
+def set_walls():
+    wall1 = (pygame.Rect(0, 0, 50, 1000), (0, 0, 0))
+    wall2 = (pygame.Rect(450, 0, 50, 1000), (0, 0, 0))
+    wall3 = (pygame.Rect(0, 0, 1000, 50), (0, 0, 0))
+    wall4 = (pygame.Rect(0, 450, 1000, 50), (0, 0, 0))
+    wall5 = (pygame.Rect(100, 350, 1000, 50), (0, 0, 0))
+    wall6 = (pygame.Rect(0, 100, 400, 50), (0, 0, 0))
+    walls = [wall1, wall2, wall3, wall4, wall5, wall6]
 
 
 def get_player(id):
@@ -57,7 +67,7 @@ def threaded_client(conn, id):
                 print("Disconnected")
                 break
             else:
-                reply = players
+                reply = [players, walls]
 
                 # print("Received: ", data)
                 # print("Sending: ", reply)
@@ -70,7 +80,7 @@ def threaded_client(conn, id):
     players.pop(get_player(id))
     conn.close()
 
-
+set_walls()
 current_player = 0
 while True:
     conn, addr = s.accept()
