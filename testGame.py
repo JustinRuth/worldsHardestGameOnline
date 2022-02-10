@@ -16,13 +16,14 @@ def redrawWindow(win, player, objects):
 
 
 def main():
-    player = Player(150, 100, 50, 50, (0, 255, 0), 0)
+    player = Player(225, 225, 50, 50, (0, 255, 0), 0)
     wall1 = (pygame.Rect(0, 0, 50, 1000), (0, 0, 0))
     wall2 = (pygame.Rect(450, 0, 50, 1000), (0, 0, 0))
     wall3 = (pygame.Rect(0, 0, 1000, 50), (0, 0, 0))
     wall4 = (pygame.Rect(0, 450, 1000, 50), (0, 0, 0))
     wall5 = (pygame.Rect(100, 350, 1000, 50), (0, 0, 0))
-    objects = [wall1, wall2, wall3, wall4, wall5]
+    wall6 = (pygame.Rect(0, 100, 400, 50), (0, 0, 0))
+    objects = [wall1, wall2, wall3, wall4, wall5, wall6]
     clock = pygame.time.Clock()
 
     while True:
