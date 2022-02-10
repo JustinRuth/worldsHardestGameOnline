@@ -23,8 +23,6 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for connection, Server Started")
 
-players = []
-walls = []
 
 def make_new_player(cp):
     """Makes a new player object at random position with a random color"""
@@ -38,7 +36,7 @@ def set_walls():
     wall4 = (pygame.Rect(0, 450, 1000, 50), (0, 0, 0))
     wall5 = (pygame.Rect(100, 350, 1000, 50), (0, 0, 0))
     wall6 = (pygame.Rect(0, 100, 400, 50), (0, 0, 0))
-    walls = [wall1, wall2, wall3, wall4, wall5, wall6]
+    return [wall1, wall2, wall3, wall4, wall5, wall6]
 
 
 def get_player(id):
@@ -80,7 +78,9 @@ def threaded_client(conn, id):
     players.pop(get_player(id))
     conn.close()
 
-set_walls()
+
+players = []
+walls = set_walls()
 current_player = 0
 while True:
     conn, addr = s.accept()
