@@ -35,7 +35,7 @@ def main():
                 run = False
                 pygame.quit()
 
-        p1.move(walls)
+        p1.move(walls, players)
         redrawWindow(win, players, walls)
 
 

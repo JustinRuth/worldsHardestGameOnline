@@ -15,20 +15,25 @@ class Player:
     def draw(self, win):
         pygame.draw.rect(win, self.color, self.rect)
 
-    def get_collisions(self, objects):
+    def get_collisions(self, objects, players):
         collisions = []
         for object in objects:
             obj = object[0]
             if self.rect.colliderect(obj):
                 collisions.append(obj)
+        for player in players:
+            if player.current_player == self.current_player:
+                continue
+            if self.rect.colliderect(player.rect):
+                collisions.append(player.rect)
         return collisions
 
-    def move(self, objects):
+    def move(self, objects, players):
         keys = pygame.key.get_pressed()
         self.horizontal_movement(keys)
-        self.check_collision_x(objects, keys)
+        self.check_collision_x(objects, players, keys)
         self.vertical_movement(keys)
-        self.check_collision_y(objects, keys)
+        self.check_collision_y(objects, players, keys)
         self.update()
 
     def horizontal_movement(self, keys):
@@ -49,16 +54,16 @@ class Player:
 
         self.update()
 
-    def check_collision_x(self, objects, keys):
-        collisions = self.get_collisions(objects)
+    def check_collision_x(self, objects, players, keys):
+        collisions = self.get_collisions(objects, players)
         for obj in collisions:
             if keys[pygame.K_LEFT]:
                 self.x = obj.x + obj.width
             elif keys[pygame.K_RIGHT]:
                 self.x = obj.x - self.width
 
-    def check_collision_y(self, objects, keys):
-        collisions = self.get_collisions(objects)
+    def check_collision_y(self, objects, players, keys):
+        collisions = self.get_collisions(objects, players)
         for obj in collisions:
             if keys[pygame.K_UP]:
                 self.y = obj.y + obj.height

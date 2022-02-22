@@ -9,7 +9,7 @@ import pygame
 hostname = socket.gethostname()
 server = socket.gethostbyname(hostname)
 
-# server = "66.71.99.2"
+# server = "66.71.20.137"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,7 +21,7 @@ except socket.error as e:
     str(e)
 
 s.listen(2)
-print("Waiting for connection, Server Started")
+print("Waiting for connection, Server Started on ", server)
 
 
 def make_new_player(cp):
