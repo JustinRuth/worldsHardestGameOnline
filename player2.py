@@ -15,7 +15,9 @@ class Player:
 
     def draw(self, win):
         pygame.draw.rect(win, (0, 0, 0), self.rect)
-        pygame.draw.rect(win, self.color, (self.x+self.width/4, self.y+self.height/4, self.width/2, self.height/2))
+        inside_width = self.width/1.6
+        side = (self.width-inside_width)/2
+        pygame.draw.rect(win, self.color, (self.x+side, self.y+side, inside_width, inside_width))
 
     def get_collisions(self, objects, players):
         collisions = []
