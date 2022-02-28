@@ -9,8 +9,8 @@ class Network:
     def __init__(self):
         """Initializes Connection to Server"""
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.server = "71.162.242.106"
-        self.server = server
+        self.server = "45.56.111.95"
+        # self.server = server
         self.port = 5555
         self.addr = (self.server, self.port)
         self.p = self.connect()
