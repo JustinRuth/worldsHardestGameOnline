@@ -11,14 +11,15 @@ class Player:
         self.rect = pygame.Rect(x, y, width, height)
         self.vel = 4
         self.current_player = cp
+        self.home = (x, y)
 
     def draw(self, win):
-        pygame.draw.rect(win, self.color, self.rect)
+        pygame.draw.rect(win, (0, 0, 0), self.rect)
+        pygame.draw.rect(win, self.color, (self.x+self.width/4, self.y+self.height/4, self.width/2, self.height/2))
 
     def get_collisions(self, objects, players):
         collisions = []
-        for object in objects:
-            obj = object[0]
+        for obj in objects:
             if self.rect.colliderect(obj):
                 collisions.append(obj)
         for player in players:
@@ -28,12 +29,13 @@ class Player:
                 collisions.append(player.rect)
         return collisions
 
-    def move(self, objects, players):
+    def move(self, objects, players, dots):
         keys = pygame.key.get_pressed()
         self.horizontal_movement(keys)
         self.check_collision_x(objects, players, keys)
         self.vertical_movement(keys)
         self.check_collision_y(objects, players, keys)
+        self.check_collision_dot(dots)
         self.update()
 
     def horizontal_movement(self, keys):
@@ -69,6 +71,9 @@ class Player:
                 self.y = obj.y + obj.height
             elif keys[pygame.K_DOWN]:
                 self.y = obj.y - self.height
+
+    def check_collision_dot(self, dots):
+        pass
 
     def update(self):
         self.rect.x = self.x

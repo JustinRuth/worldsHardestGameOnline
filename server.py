@@ -26,17 +26,7 @@ print("Waiting for connection, Server Started on ", server)
 
 def make_new_player(cp):
     """Makes a new player object at random position with a random color"""
-    players.append(Player(225, 225, 50, 50, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
-
-
-def set_walls():
-    wall1 = (pygame.Rect(0, 0, 50, 1000), (0, 0, 0))
-    wall2 = (pygame.Rect(450, 0, 50, 1000), (0, 0, 0))
-    wall3 = (pygame.Rect(0, 0, 1000, 50), (0, 0, 0))
-    wall4 = (pygame.Rect(0, 450, 1000, 50), (0, 0, 0))
-    wall5 = (pygame.Rect(100, 350, 1000, 50), (0, 0, 0))
-    wall6 = (pygame.Rect(0, 100, 400, 50), (0, 0, 0))
-    return [wall1, wall2, wall3, wall4, wall5, wall6]
+    players.append(Player(260, 260, 28, 28, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
 
 
 def get_player(id):
@@ -52,7 +42,7 @@ def get_player(id):
 def threaded_client(conn, id):
     """Main loop that sends and receives data for the players"""
     player = get_player(id)
-    conn.send(pickle.dumps(players[player]))
+    conn.send(pickle.dumps([players[player], 1]))
 
     reply = ""
     while True:
@@ -65,7 +55,7 @@ def threaded_client(conn, id):
                 print("Disconnected")
                 break
             else:
-                reply = [players, walls]
+                reply = players
 
                 # print("Received: ", data)
                 # print("Sending: ", reply)
@@ -80,7 +70,6 @@ def threaded_client(conn, id):
 
 
 players = []
-walls = set_walls()
 current_player = 0
 while True:
     conn, addr = s.accept()
