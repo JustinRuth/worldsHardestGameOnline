@@ -2,7 +2,7 @@ import pygame
 from network import Network
 import pickle
 from player2 import Player
-from dot import Dot
+from dot import *
 from load import load_map
 from spritesheet import Spritesheet
 from tiles import *
@@ -14,7 +14,13 @@ height = 720
 canvas = pygame.Surface((width, height))
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
-dots = [Dot(500, 300)]
+
+dot1 = LinearDot((424, 296), (856, 296), 6, True)
+dot2 = LinearDot((856, 344), (424, 344), 6, True)
+dot3 = LinearDot((424, 392), (856, 392), 6, True)
+dot4 = LinearDot((856, 440), (424, 440), 6, True)
+dots = [dot1, dot2, dot3, dot4]
+# 856, 296
 # dot2 = Dot(300, 300)
 spritesheet = Spritesheet('spritesheet.png')
 lol = None
@@ -26,7 +32,7 @@ n = Network()
 # walls = [pygame.Rect(206, 222, 6, 294), pygame.Rect(211, 222, 139, 6), pygame.Rect(350, 222, 6, 246), pygame.Rect(355, 462, 43, 6), pygame.Rect(398, 270, 6, 198), pygame.Rect(403, 270, 427, 6), pygame.Rect(830, 222, 6, 54), pygame.Rect(835, 222, 235, 6), pygame.Rect(1070, 222, 6, 294), pygame.Rect(931, 510, 139, 6), pygame.Rect(926, 270, 6, 246), pygame.Rect(883, 270, 43, 6), pygame.Rect(878, 270, 6, 198), pygame.Rect(451, 462, 427, 6), pygame.Rect(446, 462, 6, 54), pygame.Rect(211, 510, 235, 6)]
 current_player = -1
 
-def redrawWindow(win, players, walls):
+def redrawWindow(win, p1, players, walls):
     win.fill((180, 181, 254))
     canvas.fill((180, 181, 254))
     map.draw_map(canvas)
@@ -34,8 +40,10 @@ def redrawWindow(win, players, walls):
     for dot in dots:
         dot.draw(win)
     # dot2.draw(win)
+    p1.draw(win)
     for player in players:
-        player.draw(win)
+        if not player.current_player == p1.current_player:
+            player.draw(win)
     for wall in walls:
         pygame.draw.rect(win, (0, 0, 0), wall)
     pygame.draw.rect(win, (0, 0, 0), (862+64, 238+32, 6, 246))
@@ -48,6 +56,9 @@ def update_players(player, clock):
         clock.tick(60)
         players = n.send(player)
 
+def update_dots():
+    for dot in dots:
+        dot.move()
 
 def main():
     run = True
@@ -62,7 +73,8 @@ def main():
     while run:
         clock.tick(60)
         p1.move(walls, players, dots)
-        redrawWindow(win, players, walls)
+        update_dots()
+        redrawWindow(win, p1, players, walls)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
