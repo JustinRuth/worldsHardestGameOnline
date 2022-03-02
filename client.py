@@ -15,10 +15,10 @@ canvas = pygame.Surface((width, height))
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 
-dot1 = LinearDot((424, 296), (856, 296), 6, True)
-dot2 = LinearDot((856, 344), (424, 344), 6, True)
-dot3 = LinearDot((424, 392), (856, 392), 6, True)
-dot4 = LinearDot((856, 440), (424, 440), 6, True)
+dot1 = LinearDot((424, 296), (856, 296), 8, True)
+dot2 = LinearDot((856, 344), (424, 344), 8, True)
+dot3 = LinearDot((424, 392), (856, 392), 8, True)
+dot4 = LinearDot((856, 440), (424, 440), 8, True)
 dots = [dot1, dot2, dot3, dot4]
 # 856, 296
 # dot2 = Dot(300, 300)
