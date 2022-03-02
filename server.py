@@ -9,7 +9,7 @@ import pygame
 hostname = socket.gethostname()
 server = socket.gethostbyname(hostname)
 
-# server = "66.71.20.137"
+# server = "45.56.111.95"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,7 +26,7 @@ print("Waiting for connection, Server Started on ", server)
 
 def make_new_player(cp):
     """Makes a new player object at random position with a random color"""
-    players.append(Player(260, 260, 28, 28, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
+    players.append(Player(260, 260, 32, 32, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp))
 
 
 def get_player(id):
