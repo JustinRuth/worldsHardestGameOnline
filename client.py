@@ -85,7 +85,7 @@ def load_level(num):
     home = level_data['home']
     p1.set_home(home)
 
-
+#wtf
 def main():
     global p1, level
     run = True
