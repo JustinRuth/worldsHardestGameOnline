@@ -14,67 +14,98 @@ height = 720
 canvas = pygame.Surface((width, height))
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
-
-dot1 = LinearDot((424, 296), (856, 296), 8, True)
-dot2 = LinearDot((856, 344), (424, 344), 8, True)
-dot3 = LinearDot((424, 392), (856, 392), 8, True)
-dot4 = LinearDot((856, 440), (424, 440), 8, True)
-dots = [dot1, dot2, dot3, dot4]
-# 856, 296
-# dot2 = Dot(300, 300)
 spritesheet = Spritesheet('spritesheet.png')
-lol = None
-players = []
-map = TileMap('level2.csv', spritesheet)
-n = Network()
-# points = [(144, 192), (288, 192), (288, 432), (336, 432), (336, 240), (768, 240), (768, 192), (1008, 192), (1008, 480), (864, 480), (864, 240), (816, 240), (816, 432), (384, 432), (384, 480), (144, 480)]
-# lines = [((144, 483), (144, 190)), ((147, 192), (285, 192)), ((288, 190), (288, 435)), ((291, 432), (333, 432)), ((336, 435), (336, 238)), ((339, 240), (765, 240)), ((768, 243), (768, 190)), ((771, 192), (1005, 192)), ((1008, 190), (1008, 483)), ((1005, 480), (867, 480)), ((864, 483), (864, 238)), ((861, 240), (819, 240)), ((816, 238), (816, 435)), ((813, 432), (387, 432)), ((384, 430), (384, 483)), ((381, 480), (147, 480))]
-# walls = [pygame.Rect(206, 222, 6, 294), pygame.Rect(211, 222, 139, 6), pygame.Rect(350, 222, 6, 246), pygame.Rect(355, 462, 43, 6), pygame.Rect(398, 270, 6, 198), pygame.Rect(403, 270, 427, 6), pygame.Rect(830, 222, 6, 54), pygame.Rect(835, 222, 235, 6), pygame.Rect(1070, 222, 6, 294), pygame.Rect(931, 510, 139, 6), pygame.Rect(926, 270, 6, 246), pygame.Rect(883, 270, 43, 6), pygame.Rect(878, 270, 6, 198), pygame.Rect(451, 462, 427, 6), pygame.Rect(446, 462, 6, 54), pygame.Rect(211, 510, 235, 6)]
-current_player = -1
 
-def redrawWindow(win, p1, players, map, walls):
+n = Network()
+players = []
+p1 = None
+level = -1
+map = None
+walls = []
+# dots = []
+home = ()
+
+
+lines = [((480, 435), (480, 190)), ((483, 192), (525, 192)), ((528, 190), (528, 243)), ((531, 240), (669, 240)), ((672, 238), (672, 435)), ((669, 432), (483, 432))]
+dot1  = PathDot((568, 296), (568, 296), (712, 440), 3, True, True)
+dot2  = PathDot((616, 296), (568, 296), (712, 440), 3, True, True)
+dot3  = PathDot((664, 296), (568, 296), (712, 440), 3, True, True)
+dot4  = PathDot((712, 296), (568, 296), (712, 440), 3, True, True)
+dot5  = PathDot((712, 344), (568, 296), (712, 440), 3, True, True)
+dot6  = PathDot((712, 392), (568, 296), (712, 440), 3, True, True)
+dot7  = PathDot((712, 440), (568, 296), (712, 440), 3, True, True)
+dot8  = PathDot((664, 440), (568, 296), (712, 440), 3, True, True)
+dot9  = PathDot((616, 440), (568, 296), (712, 440), 3, True, True)
+dot10 = PathDot((568, 440), (568, 296), (712, 440), 3, True, True)
+dot11 = PathDot((568, 392), (568, 296), (712, 440), 3, True, True)
+dot12 = PathDot((568, 344), (568, 296), (712, 440), 3, True, True)
+dots = [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8, dot9, dot10, dot11]
+
+def redrawWindow(win):
+    global p1, players, map, walls
     win.fill((180, 181, 254))
     canvas.fill((180, 181, 254))
     map.draw_map(canvas)
     win.blit(canvas, (64, 32))
     for dot in dots:
         dot.draw(win)
-    # dot2.draw(win)
-    p1.draw(win)
     for player in players:
         if not player.current_player == p1.current_player:
             player.draw(win)
     for wall in walls:
         pygame.draw.rect(win, (0, 0, 0), wall)
+
+    p1.draw(win)
     pygame.display.update()
 
 
 def update_players(player, clock):
     global players
     while True:
-        clock.tick(120)
+        clock.tick(60)
         players = n.send(player)
 
+
 def update_dots():
+    global dots
     for dot in dots:
-        dot.move()
+        try:
+            dot.move()
+        except:
+            pass
+
+
+def load_level(num):
+    global level, map, walls, dots, home, p1
+    level = num
+    level_data = load_map(level)
+    map = TileMap(level_data['map'], spritesheet)
+    walls = level_data['walls']
+    # dots = level_data['dots']
+    home = level_data['home']
+    p1.set_home(home)
+
 
 def main():
+    global p1, level
     run = True
     data = n.getP()
     p1 = data[0]
-    level = 2  # data[1]
-    lol = load_map(level)
-    walls = lol['walls']
-    map = TileMap(f'level{level}.csv', spritesheet)
+    level = 3#data[1]
+    load_level(level)
     clock = pygame.time.Clock()
     start_new_thread(update_players, (p1, clock))
-
     while run:
         clock.tick(60)
         p1.move(walls, players, dots)
         update_dots()
-        redrawWindow(win, p1, players, map, walls)
+        redrawWindow(win)
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_j]:
+            load_level(1)
+        if keys[pygame.K_k]:
+            load_level(2)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

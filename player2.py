@@ -9,7 +9,7 @@ class Player:
         self.height = height
         self.color = color
         self.rect = pygame.Rect(x, y, width, height)
-        self.vel = 4
+        self.vel = 3
         self.current_player = cp
         self.home = (x, y)
 
@@ -80,6 +80,12 @@ class Player:
                 self.x = self.home[0]
                 self.y = self.home[1]
                 break
+
+    def set_home(self, home):
+        self.home = home
+        self.x = self.home[0]
+        self.y = self.home[1]
+        self.update()
 
     def update(self):
         self.rect.x = self.x

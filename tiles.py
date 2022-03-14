@@ -38,7 +38,8 @@ class TileMap():
 
     def load_tiles(self, filename):
         tiles = []
-        map = self.read_csv(filename)
+        # map = self.read_csv(filename)
+        map = filename
         x, y = 0, 0
         for row in map:
             x = 0
