@@ -12,6 +12,7 @@ class Player:
         self.vel = 3
         self.current_player = cp
         self.home = (x, y)
+        self.level = 1
 
     def draw(self, win):
         pygame.draw.rect(win, (0, 0, 0), self.rect)
@@ -81,7 +82,8 @@ class Player:
                 self.y = self.home[1]
                 break
 
-    def set_home(self, home):
+    def set_level(self, level, home):
+        self.level = level
         self.home = home
         self.x = self.home[0]
         self.y = self.home[1]

@@ -22,24 +22,9 @@ p1 = None
 level = -1
 map = None
 walls = []
-# dots = []
+dots = []
 home = ()
 
-
-lines = [((480, 435), (480, 190)), ((483, 192), (525, 192)), ((528, 190), (528, 243)), ((531, 240), (669, 240)), ((672, 238), (672, 435)), ((669, 432), (483, 432))]
-dot1  = PathDot((568, 296), (568, 296), (712, 440), 3, True, True)
-dot2  = PathDot((616, 296), (568, 296), (712, 440), 3, True, True)
-dot3  = PathDot((664, 296), (568, 296), (712, 440), 3, True, True)
-dot4  = PathDot((712, 296), (568, 296), (712, 440), 3, True, True)
-dot5  = PathDot((712, 344), (568, 296), (712, 440), 3, True, True)
-dot6  = PathDot((712, 392), (568, 296), (712, 440), 3, True, True)
-dot7  = PathDot((712, 440), (568, 296), (712, 440), 3, True, True)
-dot8  = PathDot((664, 440), (568, 296), (712, 440), 3, True, True)
-dot9  = PathDot((616, 440), (568, 296), (712, 440), 3, True, True)
-dot10 = PathDot((568, 440), (568, 296), (712, 440), 3, True, True)
-dot11 = PathDot((568, 392), (568, 296), (712, 440), 3, True, True)
-dot12 = PathDot((568, 344), (568, 296), (712, 440), 3, True, True)
-dots = [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8, dot9, dot10, dot11]
 
 def redrawWindow(win):
     global p1, players, map, walls
@@ -51,7 +36,8 @@ def redrawWindow(win):
         dot.draw(win)
     for player in players:
         if not player.current_player == p1.current_player:
-            player.draw(win)
+            if player.level == p1.level:
+                player.draw(win)
     for wall in walls:
         pygame.draw.rect(win, (0, 0, 0), wall)
 
@@ -81,11 +67,11 @@ def load_level(num):
     level_data = load_map(level)
     map = TileMap(level_data['map'], spritesheet)
     walls = level_data['walls']
-    # dots = level_data['dots']
+    dots = level_data['dots']
     home = level_data['home']
-    p1.set_home(home)
+    p1.set_level(level, home)
 
-#wtf
+
 def main():
     global p1, level
     run = True
@@ -96,16 +82,22 @@ def main():
     clock = pygame.time.Clock()
     start_new_thread(update_players, (p1, clock))
     while run:
-        clock.tick(60)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_b]:
+            clock.tick(1)
+        else:
+            clock.tick(60)
         p1.move(walls, players, dots)
         update_dots()
         redrawWindow(win)
-        keys = pygame.key.get_pressed()
+
 
         if keys[pygame.K_j]:
             load_level(1)
         if keys[pygame.K_k]:
             load_level(2)
+        if keys[pygame.K_l]:
+            load_level(3)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
