@@ -26,8 +26,8 @@ dots = []
 home = ()
 
 
-def redrawWindow(win):
-    global p1, players, map, walls
+def redrawWindow():
+    global win, p1, players, map, walls
     win.fill((180, 181, 254))
     canvas.fill((180, 181, 254))
     map.draw_map(canvas)
@@ -40,7 +40,6 @@ def redrawWindow(win):
                 player.draw(win)
     for wall in walls:
         pygame.draw.rect(win, (0, 0, 0), wall)
-
     p1.draw(win)
     pygame.display.update()
 
@@ -72,12 +71,12 @@ def load_level(num):
     p1.set_level(level, home)
 
 
-def main():
+def main(l):
     global p1, level
     run = True
     data = n.getP()
     p1 = data[0]
-    level = 3#data[1]
+    level = l   # data[1]
     load_level(level)
     clock = pygame.time.Clock()
     start_new_thread(update_players, (p1, clock))
@@ -89,8 +88,7 @@ def main():
             clock.tick(60)
         p1.move(walls, players, dots)
         update_dots()
-        redrawWindow(win)
-
+        redrawWindow()
 
         if keys[pygame.K_j]:
             load_level(1)
@@ -98,11 +96,12 @@ def main():
             load_level(2)
         if keys[pygame.K_l]:
             load_level(3)
+        if keys[pygame.K_SEMICOLON]:
+            load_level(4)
+        if keys[pygame.K_ESCAPE]:
+            run = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
-
-
-main()
