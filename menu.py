@@ -43,22 +43,6 @@ def check_name_test(value: str) -> None:
     print(f'User name: {value}')
 
 
-def update_menu_sound(value: Tuple, enabled: bool) -> None:
-    """
-    Update menu sound.
-
-    :param value: Value of the selector (Label and index)
-    :param enabled: Parameter of the selector, (True/False)
-    """
-    assert isinstance(value, tuple)
-    if enabled:
-        main_menu.set_sound(sound, recursive=True)
-        print('Menu sounds were enabled')
-    else:
-        main_menu.set_sound(None, recursive=True)
-        print('Menu sounds were disabled')
-
-
 def main(test: bool = False) -> None:
     """
     Main program.
@@ -241,55 +225,7 @@ def main(test: bool = False) -> None:
                              align=pygame_menu.locals.ALIGN_CENTER)
 
     # -------------------------------------------------------------------------
-    # Create menus: More settings
-    # -------------------------------------------------------------------------
-    more_settings_menu = pygame_menu.Menu(
-        height=WINDOW_SIZE[1] * 0.85,
-        theme=settings_menu_theme,
-        title='More Settings',
-        width=WINDOW_SIZE[0] * 0.9
-    )
-
-    more_settings_menu.add.image(
-        pygame_menu.baseimage.IMAGE_EXAMPLE_PYGAME_MENU,
-        scale=(0.25, 0.25),
-        align=pygame_menu.locals.ALIGN_CENTER
-    )
-    more_settings_menu.add.color_input(
-        'Color 1 RGB: ',
-        color_type='rgb'
-    )
-    more_settings_menu.add.color_input(
-        'Color 2 RGB: ',
-        color_type='rgb',
-        default=(255, 0, 0),
-        input_separator='-'
-    )
-
-    def print_color(color: Tuple) -> None:
-        """
-        Test onchange/onreturn.
-
-        :param color: Color tuple
-        """
-        print('Returned color: ', color)
-
-    more_settings_menu.add.color_input(
-        'Color in Hex: ',
-        color_type='hex',
-        hex_format='lower',
-        color_id='hex_color',
-        onreturn=print_color
-    )
-
-    more_settings_menu.add.vertical_margin(25)
-    more_settings_menu.add.button(
-        'Return to main menu',
-        pygame_menu.events.BACK,
-        align=pygame_menu.locals.ALIGN_CENTER
-    )
-    # -------------------------------------------------------------------------
-    # Create menus: Test Menu
+    # Create menus: Single Player
     # -------------------------------------------------------------------------
     single_player_menu = pygame_menu.Menu(
         height=WINDOW_SIZE[1],
@@ -298,14 +234,14 @@ def main(test: bool = False) -> None:
         width=WINDOW_SIZE[0]
     )
 
-    def play() -> None:
+    def play_single() -> None:
         global level
-        client.main(level)
+        client.main(level, False)
 
 
     single_player_menu.add.button(
         'Play',
-        play,
+        play_single,
         align=pygame_menu.locals.ALIGN_CENTER
     )
 
@@ -334,6 +270,56 @@ def main(test: bool = False) -> None:
 
     single_player_menu.add.vertical_margin(50)
     single_player_menu.add.button(
+        'Return to main menu',
+        pygame_menu.events.BACK,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+
+    # -------------------------------------------------------------------------
+    # Create menus: Single Player
+    # -------------------------------------------------------------------------
+    multi_player_menu = pygame_menu.Menu(
+        height=WINDOW_SIZE[1],
+        theme=settings_menu_theme,
+        title='Multiplayer',
+        width=WINDOW_SIZE[0]
+    )
+
+    def play_multi() -> None:
+        global level
+        client.main(level, True)
+
+    multi_player_menu.add.button(
+        'Play',
+        play_multi,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+
+    levels = [('1', 1),
+              ('2', 2),
+              ('3', 3),
+              ('4', 4)]
+
+    def set_level(selected: Tuple, value: Optional) -> None:
+        """
+        Set the difficulty of the game.
+        """
+        global level
+        level = value
+
+    # Create selector with 3 difficulty options
+    multi_player_menu.add.vertical_margin(25)
+    multi_player_menu.add.selector(
+        'Level Select:\t',
+        levels,
+        selector_id='Level',
+        default=0,
+        onchange=set_level,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+
+    multi_player_menu.add.vertical_margin(50)
+    multi_player_menu.add.button(
         'Return to main menu',
         pygame_menu.events.BACK,
         align=pygame_menu.locals.ALIGN_CENTER
@@ -382,13 +368,10 @@ def main(test: bool = False) -> None:
         width=WINDOW_SIZE[0]
     )
 
-    main_menu.add.button('Settings', settings_menu)
-    main_menu.add.button('More Settings', more_settings_menu)
     main_menu.add.button('Single Player', single_player_menu)
+    main_menu.add.button('Multiplayer', multi_player_menu)
+    main_menu.add.button('Settings', settings_menu)
     main_menu.add.button('Menu in textures and columns', button_column_menu)
-    main_menu.add.selector('Menu sounds ',
-                           [('Off', False), ('On', True)],
-                           onchange=update_menu_sound)
     main_menu.add.button('Quit', pygame_menu.events.EXIT)
 
     # -------------------------------------------------------------------------

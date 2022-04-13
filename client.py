@@ -71,15 +71,19 @@ def load_level(num):
     p1.set_level(level, home)
 
 
-def main(l):
-    global p1, level
+def main(l, m):
+    global p1, level, players
     run = True
-    data = n.getP()
-    p1 = data[0]
-    level = l   # data[1]
-    load_level(level)
     clock = pygame.time.Clock()
-    start_new_thread(update_players, (p1, clock))
+    if m:
+        data = n.getP()
+        p1 = data[0]
+        level = data[1]
+        start_new_thread(update_players, (p1, clock))
+    else:
+        p1 = Player(260, 260, 32, 32, (255, 0, 0), 0)
+        level = l
+    load_level(level)
     while run:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_b]:
@@ -89,6 +93,8 @@ def main(l):
         p1.move(walls, players, dots)
         update_dots()
         redrawWindow()
+
+        print(len(players))
 
         if keys[pygame.K_j]:
             load_level(1)
@@ -100,8 +106,10 @@ def main(l):
             load_level(4)
         if keys[pygame.K_ESCAPE]:
             run = False
+            n.disconnect()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                n.disconnect()
                 pygame.quit()

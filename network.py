@@ -33,3 +33,10 @@ class Network:
             return pickle.loads(self.client.recv(4096))
         except socket.error as e:
             print(e)
+
+    def disconnect(self):
+        try:
+            self.client.send(pickle.dumps('disconnect'))
+        except socket.error as e:
+            print(e)
+

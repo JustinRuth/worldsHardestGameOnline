@@ -54,6 +54,9 @@ def threaded_client(conn, id):
             if not data:
                 print("Disconnected")
                 break
+            elif data == 'disconnect':
+                print("Disconnected")
+                break
             else:
                 reply = players
 
