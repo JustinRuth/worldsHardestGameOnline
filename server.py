@@ -6,10 +6,10 @@ import random
 import pygame
 
 # Gets the Users IP (For temp use only)
-hostname = socket.gethostname()
-server = socket.gethostbyname(hostname)
+# hostname = socket.gethostname()
+# server = socket.gethostbyname(hostname)
 
-# server = "45.56.111.95"
+server = "45.56.111.95"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,15 +49,14 @@ def threaded_client(conn, id):
         try:
             data = pickle.loads(conn.recv(4096))
             player = get_player(id)
-            players[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             elif data == 'disconnect':
-                print("Disconnected")
                 break
             else:
+                players[player] = data
                 reply = players
 
                 # print("Received: ", data)

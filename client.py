@@ -6,7 +6,7 @@ from dot import *
 from load import load_map
 from spritesheet import Spritesheet
 from tiles import *
-from _thread import *
+import threading
 
 
 width = 1280
@@ -16,7 +16,7 @@ win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 spritesheet = Spritesheet('spritesheet.png')
 
-n = Network()
+n = None
 players = []
 p1 = None
 level = -1
@@ -24,6 +24,13 @@ map = None
 walls = []
 dots = []
 home = ()
+multi = False
+run = True
+
+def set_network():
+    global n
+    if n is None:
+        n = Network()
 
 
 def redrawWindow():
@@ -34,10 +41,11 @@ def redrawWindow():
     win.blit(canvas, (64, 32))
     for dot in dots:
         dot.draw(win)
-    for player in players:
-        if not player.current_player == p1.current_player:
-            if player.level == p1.level:
-                player.draw(win)
+    if multi:
+        for player in players:
+            if not player.current_player == p1.current_player:
+                if player.level == p1.level:
+                    player.draw(win)
     for wall in walls:
         pygame.draw.rect(win, (0, 0, 0), wall)
     p1.draw(win)
@@ -45,11 +53,13 @@ def redrawWindow():
 
 
 def update_players(player, clock):
-    global players
-    while True:
+    global players, run
+    while run:
         clock.tick(60)
-        players = n.send(player)
-
+        try:
+            players = n.send(player)
+        except:
+            pass
 
 def update_dots():
     global dots
@@ -71,18 +81,13 @@ def load_level(num):
     p1.set_level(level, home)
 
 
-def main(l, m):
-    global p1, level, players
+def play_single(l):
+    global p1, level, multi, run
     run = True
+    multi = False
     clock = pygame.time.Clock()
-    if m:
-        data = n.getP()
-        p1 = data[0]
-        level = data[1]
-        start_new_thread(update_players, (p1, clock))
-    else:
-        p1 = Player(260, 260, 32, 32, (255, 0, 0), 0)
-        level = l
+    p1 = Player(260, 260, 32, 32, (255, 0, 0), 0)
+    level = l
     load_level(level)
     while run:
         keys = pygame.key.get_pressed()
@@ -94,7 +99,48 @@ def main(l, m):
         update_dots()
         redrawWindow()
 
-        print(len(players))
+        if keys[pygame.K_j]:
+            load_level(1)
+        if keys[pygame.K_k]:
+            load_level(2)
+        if keys[pygame.K_l]:
+            load_level(3)
+        if keys[pygame.K_SEMICOLON]:
+            load_level(4)
+        if keys[pygame.K_ESCAPE]:
+            run = False
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+
+def play_multi():
+    global p1, level, players, n, multi, stop, run
+    run = True
+    multi = True
+    clock = pygame.time.Clock()
+    set_network()
+    data = n.getP()
+    print(data)
+    p1 = data[0]
+    level = data[1]
+    threading.Thread(target=update_players,
+                     args=(p1, clock),
+                     ).start()
+    load_level(level)
+    while run:
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_b]:
+            clock.tick(1)
+        else:
+            clock.tick(60)
+        p1.move(walls, players, dots)
+        update_dots()
+        redrawWindow()
+
+        # print(len(players))
+        print(threading.enumerate())
 
         if keys[pygame.K_j]:
             load_level(1)
@@ -107,6 +153,7 @@ def main(l, m):
         if keys[pygame.K_ESCAPE]:
             run = False
             n.disconnect()
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

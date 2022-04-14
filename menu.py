@@ -236,7 +236,7 @@ def main(test: bool = False) -> None:
 
     def play_single() -> None:
         global level
-        client.main(level, False)
+        client.play_single(level)
 
 
     single_player_menu.add.button(
@@ -287,7 +287,7 @@ def main(test: bool = False) -> None:
 
     def play_multi() -> None:
         global level
-        client.main(level, True)
+        client.play_multi()
 
     multi_player_menu.add.button(
         'Play',
