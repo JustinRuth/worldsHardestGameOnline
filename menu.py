@@ -15,6 +15,8 @@ from pygame_menu.examples import create_example_window
 from typing import Tuple, Optional
 
 import client
+import client_single
+import client_multi
 # Constants and global variables
 FPS = 60
 WINDOW_SIZE = (1280, 720)
@@ -236,7 +238,7 @@ def main(test: bool = False) -> None:
 
     def play_single() -> None:
         global level
-        client.play_single(level)
+        client_single.play_single(level)
 
 
     single_player_menu.add.button(
@@ -287,34 +289,11 @@ def main(test: bool = False) -> None:
 
     def play_multi() -> None:
         global level
-        client.play_multi()
+        client_multi.play_multi()
 
     multi_player_menu.add.button(
         'Play',
         play_multi,
-        align=pygame_menu.locals.ALIGN_CENTER
-    )
-
-    levels = [('1', 1),
-              ('2', 2),
-              ('3', 3),
-              ('4', 4)]
-
-    def set_level(selected: Tuple, value: Optional) -> None:
-        """
-        Set the difficulty of the game.
-        """
-        global level
-        level = value
-
-    # Create selector with 3 difficulty options
-    multi_player_menu.add.vertical_margin(25)
-    multi_player_menu.add.selector(
-        'Level Select:\t',
-        levels,
-        selector_id='Level',
-        default=0,
-        onchange=set_level,
         align=pygame_menu.locals.ALIGN_CENTER
     )
 
