@@ -278,7 +278,7 @@ def main(test: bool = False) -> None:
     )
 
     # -------------------------------------------------------------------------
-    # Create menus: Single Player
+    # Create menus: Multiplayer
     # -------------------------------------------------------------------------
     multi_player_menu = pygame_menu.Menu(
         height=WINDOW_SIZE[1],

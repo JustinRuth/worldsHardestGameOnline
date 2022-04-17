@@ -78,7 +78,8 @@ def load_level(num):
     walls = level_data['walls']
     dots = level_data['dots']
     home = level_data['home']
-    p1.set_level(level, home)
+    end = pygame.Rect(0, 0, 0, 0)
+    p1.set_level(level, home, end)
 
 
 def play_multi():

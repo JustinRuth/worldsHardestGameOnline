@@ -21,6 +21,11 @@ home = ()
 end = ()
 run = True
 
+lmao = SpinDotParent((640, 464), 1.75, 5, 36, True)
+lmao2 = lmao.dots
+def loadDot():
+    for dot in lmao2:
+        dots.append(dot)
 
 def redrawWindow():
     global win, p1, map, walls
@@ -53,6 +58,7 @@ def load_level(num):
     map = TileMap(level_data['map'], spritesheet)
     walls = level_data['walls']
     dots = level_data['dots']
+    loadDot()
     home = level_data['home']
     end = level_data['end']
     p1.set_level(level, home, end)

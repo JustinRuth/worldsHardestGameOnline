@@ -1,5 +1,5 @@
 import pygame
-
+import math
 
 class Dot:
     def __init__(self, x, y):
@@ -141,3 +141,35 @@ class PathDot(Dot):
             if self.y <= self.tl_pos[1]:
                 self.cycle = 0
                 self.y = self.tl_pos[1]
+
+class SpinDotParent():
+    def __init__(self, pos, speed, length, separation, center):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.speed = speed
+        self.radius = separation
+        self.length = length
+        self.separation = separation
+        self.angle = 0
+        self.dots = []
+        for i in range(4):
+            for u in range(length):
+                self.dots.append(SpinDot(pos, speed, self.radius + (u*separation), self.angle))
+            self.angle += 90
+        if center:
+            self.dots.append(Dot(pos[0], pos[1]))
+
+
+class SpinDot(Dot):
+    def __init__(self, pos, speed, radius, angle):
+        super().__init__(pos[0], pos[1])
+        self.center = pos
+        self.speed = speed
+        self.rad = radius
+        self.angle = angle
+
+    def move(self):
+        x = self.center[0] + math.cos(math.radians(self.angle)) * self.rad
+        y = self.center[1] + math.sin(math.radians(self.angle)) * self.rad
+        self.update_pos(x, y)
+        self.angle += self.speed
