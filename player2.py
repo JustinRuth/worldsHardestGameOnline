@@ -1,4 +1,6 @@
 import pygame
+from dot import *
+
 
 
 class Player:
@@ -14,6 +16,8 @@ class Player:
         self.home = (x, y)
         self.level = 1
         self.end = None
+        self.coins = []
+        self.checkpoints = []
 
     def draw(self, win):
         pygame.draw.rect(win, (0, 0, 0), self.rect)
@@ -28,13 +32,16 @@ class Player:
                 collisions.append(obj)
         return collisions
 
-    def move(self, objects, dots):
+    def move(self, objects, dots, coins):
+        self.coins = coins
         keys = pygame.key.get_pressed()
         self.horizontal_movement(keys)
         self.check_collision_x(objects, keys)
         self.vertical_movement(keys)
         self.check_collision_y(objects, keys)
         self.check_collision_dots(dots)
+        self.check_collision_coins()
+        self.check_collision_checkpoints()
         self.update()
         return self.check_level_complete()
 
@@ -74,15 +81,40 @@ class Player:
 
     def check_collision_dots(self, dots):
         for dot in dots:
+            if isinstance(dot, SpinDotParent):
+                if self.check_collision_spindots(dot.dots):
+                    break
+            elif self.rect.colliderect(dot.hitbox):
+                self.x = self.home[0]
+                self.y = self.home[1]
+                self.reset_coins()
+                break
+
+    def check_collision_spindots(self, dots):
+        for dot in dots:
             if self.rect.colliderect(dot.hitbox):
                 self.x = self.home[0]
                 self.y = self.home[1]
-                break
+                self.reset_coins()
+                return True
+        return False
 
-    def set_level(self, level, home, end):
+    def check_collision_coins(self):
+        for coin in self.coins:
+            if self.rect.colliderect(coin.hitbox):
+                coin.collected = True
+
+    def check_collision_checkpoints(self):
+        for cp in self.checkpoints[::-1]:
+            if self.rect.colliderect(cp[0]) and not cp[2]:
+                self.home = cp[1]
+                cp = (cp[0], cp[1], True)
+
+    def set_level(self, level, home, end, cp):
         self.level = level
         self.home = home
         self.end = end
+        self.checkpoints = cp
         self.x = self.home[0]
         self.y = self.home[1]
         self.update()
@@ -94,5 +126,16 @@ class Player:
     def get_rect(self):
         return self.rect
 
+    def reset_coins(self):
+        for coin in self.coins:
+            coin.reset()
+
     def check_level_complete(self):
-        return self.rect.colliderect(self.end)
+        count = 0
+        for coin in self.coins:
+            if coin.collected == True:
+                count += 1
+        if count == len(self.coins) and self.rect.colliderect(self.end):
+            return True
+        else:
+            return False

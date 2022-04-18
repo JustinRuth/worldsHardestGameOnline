@@ -143,7 +143,7 @@ class PathDot(Dot):
                 self.y = self.tl_pos[1]
 
 class SpinDotParent():
-    def __init__(self, pos, speed, length, separation, center):
+    def __init__(self, pos, speed, length, separation, offset, center):
         self.x = pos[0]
         self.y = pos[1]
         self.speed = speed
@@ -154,10 +154,18 @@ class SpinDotParent():
         self.dots = []
         for i in range(4):
             for u in range(length):
-                self.dots.append(SpinDot(pos, speed, self.radius + (u*separation), self.angle))
+                self.dots.append(SpinDot(pos, speed, (self.radius + offset) + (u * separation), self.angle))
             self.angle += 90
         if center:
             self.dots.append(Dot(pos[0], pos[1]))
+
+    def move(self):
+        for dot in self.dots:
+            dot.move()
+
+    def draw(self, win):
+        for dot in self.dots:
+            dot.draw(win)
 
 
 class SpinDot(Dot):

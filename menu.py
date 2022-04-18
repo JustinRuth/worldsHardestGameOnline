@@ -250,7 +250,11 @@ def main(test: bool = False) -> None:
     levels = [('1', 1),
               ('2', 2),
               ('3', 3),
-              ('4', 4)]
+              ('4', 4),
+              ('5', 5),
+              ('6', 6),
+              ('7', 7),
+              ('8', 8)]
 
     def set_level(selected: Tuple, value: Optional) -> None:
         """
