@@ -22,11 +22,9 @@ home = ()
 end = ()
 coins = []
 run = True
+deaths = 0
 
-lmao = PathDot((424, 152), (424, 152), (568, 296), 3, False, True)
 
-# for line in lines:
-#     print(pygame.draw.line(win, (0, 0, 0), line[0], line[1], width=6))
 def redrawWindow():
     global win, p1, map, walls, coins
     win.fill((180, 181, 254))
@@ -56,22 +54,29 @@ def load_level(num):
     global level, map, walls, dots, home, p1, end, coins
     level_data = load_map(num)
     if level_data == None:
-        return
+        return False
     level = num
     map = TileMap(level_data['map'], spritesheet)
     walls = level_data['walls']
     dots = level_data['dots']
-    dots.append(lmao)
     home = level_data['home']
     end = level_data['end']
     coins = level_data['coins']
     checkpoints = level_data['checkpoints']
-    p1.set_level(level, home, end, checkpoints)
+    p1.set_level(num, home, end, checkpoints)
+    p1.reset_deaths()
+    return True
+
+
+def load_next_level():
+    global level
+    load_level(level+1)
 
 
 def play_single(l):
-    global p1, level, run
+    global p1, level, run, deaths
     run = True
+    deaths = 0
     clock = pygame.time.Clock()
     p1 = Player(260, 260, 32, 32, (255, 0, 0), 0)
     level = l
@@ -84,9 +89,11 @@ def play_single(l):
             clock.tick(60)
         lc = p1.move(walls, dots, coins)
         if lc:
-            load_level(level+1)
+            # print('lc')
+            load_next_level()
         update_dots()
         redrawWindow()
+        deaths = p1.get_deaths()
 
         if keys[pygame.K_ESCAPE]:
             run = False
@@ -99,5 +106,5 @@ def play_single(l):
                 if keys[pygame.K_j]:
                     load_level(level-1)
                 if keys[pygame.K_k]:
-                    load_level(level+1)
+                    load_next_level()
                 

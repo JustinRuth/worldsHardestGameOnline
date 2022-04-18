@@ -254,7 +254,8 @@ def main(test: bool = False) -> None:
               ('5', 5),
               ('6', 6),
               ('7', 7),
-              ('8', 8)]
+              ('8', 8),
+              ('9', 9)]
 
     def set_level(selected: Tuple, value: Optional) -> None:
         """
@@ -309,33 +310,6 @@ def main(test: bool = False) -> None:
     )
 
     # -------------------------------------------------------------------------
-    # Create menus: Column buttons
-    # -------------------------------------------------------------------------
-    button_column_menu_theme = pygame_menu.themes.THEME_DARK.copy()
-    button_column_menu_theme.background_color = pygame_menu.BaseImage(
-        image_path=pygame_menu.baseimage.IMAGE_EXAMPLE_GRAY_LINES,
-        drawing_mode=pygame_menu.baseimage.IMAGE_MODE_REPEAT_XY
-    )
-    button_column_menu_theme.widget_font_size = 25
-
-    button_column_menu = pygame_menu.Menu(
-        columns=2,
-        height=WINDOW_SIZE[1] * 0.45,
-        rows=3,
-        theme=button_column_menu_theme,
-        title='Textures+Columns',
-        width=WINDOW_SIZE[0] * 0.9
-    )
-    for i in range(4):
-        button_column_menu.add.button(f'Button {i}', pygame_menu.events.BACK)
-    button_column_menu.add.button(
-        'Return to main menu', pygame_menu.events.BACK,
-        background_color=pygame_menu.BaseImage(
-            image_path=pygame_menu.baseimage.IMAGE_EXAMPLE_METAL
-        )
-    ).background_inflate_to_selection_effect()
-
-    # -------------------------------------------------------------------------
     # Create menus: Main menu
     # -------------------------------------------------------------------------
     main_menu_theme = pygame_menu.themes.THEME_DARK.copy()
@@ -354,7 +328,6 @@ def main(test: bool = False) -> None:
     main_menu.add.button('Single Player', single_player_menu)
     main_menu.add.button('Multiplayer', multi_player_menu)
     main_menu.add.button('Settings', settings_menu)
-    main_menu.add.button('Menu in textures and columns', button_column_menu)
     main_menu.add.button('Quit', pygame_menu.events.EXIT)
 
     # -------------------------------------------------------------------------

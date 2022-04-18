@@ -18,6 +18,7 @@ class Player:
         self.end = None
         self.coins = []
         self.checkpoints = []
+        self.deaths = 0
 
     def draw(self, win):
         pygame.draw.rect(win, (0, 0, 0), self.rect)
@@ -39,9 +40,9 @@ class Player:
         self.check_collision_x(objects, keys)
         self.vertical_movement(keys)
         self.check_collision_y(objects, keys)
-        self.check_collision_dots(dots)
-        self.check_collision_coins()
         self.check_collision_checkpoints()
+        self.check_collision_coins()
+        self.check_collision_dots(dots)
         self.update()
         return self.check_level_complete()
 
@@ -88,6 +89,7 @@ class Player:
                 self.x = self.home[0]
                 self.y = self.home[1]
                 self.reset_coins()
+                self.deaths += 1
                 break
 
     def check_collision_spindots(self, dots):
@@ -96,6 +98,7 @@ class Player:
                 self.x = self.home[0]
                 self.y = self.home[1]
                 self.reset_coins()
+                self.deaths += 1
                 return True
         return False
 
@@ -139,3 +142,9 @@ class Player:
             return True
         else:
             return False
+
+    def reset_deaths(self):
+        self.deaths = 0
+
+    def get_deaths(self):
+        return self.deaths

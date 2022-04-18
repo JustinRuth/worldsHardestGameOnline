@@ -109,38 +109,48 @@ class PathDot(Dot):
         return -1
 
     def move(self):
-        if self.cycle == 0:
-            if self.x >= self.br_pos[0]:
-                self.cycle += 1
-                self.x = self.br_pos[0]
-            self.update_pos(self.x+self.speed, self.y)
-            if self.x >= self.br_pos[0]:
-                self.cycle += 1
-                self.x = self.br_pos[0]
-        elif self.cycle == 1:
-            if self.y >= self.br_pos[1]:
-                self.cycle += 1
-                self.y = self.br_pos[1]
-            self.update_pos(self.x, self.y+self.speed)
-            if self.y >= self.br_pos[1]:
-                self.cycle += 1
-                self.y = self.br_pos[1]
-        elif self.cycle == 2:
-            if self.x <= self.tl_pos[0]:
-                self.cycle += 1
-                self.x = self.tl_pos[0]
-            self.update_pos(self.x-self.speed, self.y)
-            if self.x <= self.tl_pos[0]:
-                self.cycle += 1
-                self.x = self.tl_pos[0]
-        elif self.cycle == 3:
-            if self.y <= self.tl_pos[1]:
-                self.cycle = 0
-                self.y = self.tl_pos[1]
-            self.update_pos(self.x, self.y-self.speed)
-            if self.y <= self.tl_pos[1]:
-                self.cycle = 0
-                self.y = self.tl_pos[1]
+        if self.direction:
+            if self.cycle == 0:
+                self.update_pos(self.x+self.speed, self.y)
+                if self.x >= self.br_pos[0]:
+                    self.cycle += 1
+                    self.x = self.br_pos[0]
+            elif self.cycle == 1:
+                self.update_pos(self.x, self.y+self.speed)
+                if self.y >= self.br_pos[1]:
+                    self.cycle += 1
+                    self.y = self.br_pos[1]
+            elif self.cycle == 2:
+                self.update_pos(self.x-self.speed, self.y)
+                if self.x <= self.tl_pos[0]:
+                    self.cycle += 1
+                    self.x = self.tl_pos[0]
+            elif self.cycle == 3:
+                self.update_pos(self.x, self.y-self.speed)
+                if self.y <= self.tl_pos[1]:
+                    self.cycle = 0
+                    self.y = self.tl_pos[1]
+        else:
+            if self.cycle == 0:
+                self.update_pos(self.x-self.speed, self.y)
+                if self.x <= self.tl_pos[0]:
+                    self.cycle = 3
+                    self.x = self.tl_pos[0]
+            elif self.cycle == 1:
+                self.update_pos(self.x, self.y-self.speed)
+                if self.y <= self.tl_pos[1]:
+                    self.cycle -= 1
+                    self.y = self.tl_pos[1]
+            elif self.cycle == 2:
+                self.update_pos(self.x+self.speed, self.y)
+                if self.x >= self.br_pos[0]:
+                    self.cycle -= 1
+                    self.x = self.br_pos[0]
+            elif self.cycle == 3:
+                self.update_pos(self.x, self.y+self.speed)
+                if self.y >= self.br_pos[1]:
+                    self.cycle -= 1
+                    self.y = self.br_pos[1]
 
 class SpinDotParent():
     def __init__(self, pos, speed, length, separation, offset, center):
