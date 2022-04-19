@@ -255,7 +255,8 @@ def main(test: bool = False) -> None:
               ('6', 6),
               ('7', 7),
               ('8', 8),
-              ('9', 9)]
+              ('9', 9),
+              ('10', 10)]
 
     def set_level(selected: Tuple, value: Optional) -> None:
         """

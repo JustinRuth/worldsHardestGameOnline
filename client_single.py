@@ -24,6 +24,13 @@ coins = []
 run = True
 deaths = 0
 
+# for line in lines:
+#     print(pygame.draw.line(win, (0, 0, 0), line[0], line[1], width=6))
+lmao =  [LinearDot((520, 296), (572, 296), 2, True), LinearDot((572, 344), (520, 344), 2, True), LinearDot((520, 392), (572, 392), 2, True), LinearDot((572, 440), (520, 440), 2, True)]
+lmao2 = [LinearDot((472, 440), (424, 440), 2, True), LinearDot((424, 488), (472, 488), 2, True), LinearDot((472, 536), (424, 536), 2, True)]
+lmao3 = [LinearDot((520, 584), (520, 536), 2, False), LinearDot((568, 536), (568, 584), 2, False), LinearDot((616, 584), (616, 536), 2, False), LinearDot((664, 536), (664, 584), 2, False), LinearDot((712, 584), (712, 536), 2, False)]
+lmao4 = [LinearDot((760, 440), (808, 440), 2, True), LinearDot((808, 488), (760, 488), 2, True), LinearDot((760, 536), (808, 536), 2, True)]
+lmao5 = [LinearDot((712, 296), (664, 296), 2, True), LinearDot((664, 344), (712, 344), 2, True), LinearDot((712, 392), (664, 392), 2, True), LinearDot((664, 440), (712, 440), 2, True)]
 
 def redrawWindow():
     global win, p1, map, walls, coins
@@ -59,6 +66,8 @@ def load_level(num):
     map = TileMap(level_data['map'], spritesheet)
     walls = level_data['walls']
     dots = level_data['dots']
+    if level == 10:
+        dots = dots + lmao + lmao2 + lmao3 + lmao4 + lmao5
     home = level_data['home']
     end = level_data['end']
     coins = level_data['coins']
@@ -89,7 +98,7 @@ def play_single(l):
             clock.tick(60)
         lc = p1.move(walls, dots, coins)
         if lc:
-            # print('lc')
+            print('lc')
             load_next_level()
         update_dots()
         redrawWindow()
