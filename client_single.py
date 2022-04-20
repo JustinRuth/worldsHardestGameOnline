@@ -1,4 +1,5 @@
 import pygame
+import pygame_menu
 from player2 import Player
 from dot import *
 from coin import *
@@ -23,14 +24,8 @@ end = ()
 coins = []
 run = True
 deaths = 0
+deathsPrev = 0
 
-# for line in lines:
-#     print(pygame.draw.line(win, (0, 0, 0), line[0], line[1], width=6))
-lmao =  [LinearDot((520, 296), (576, 296), 2, True), LinearDot((576, 344), (520, 344), 2, True), LinearDot((520, 392), (576, 392), 2, True), LinearDot((576, 440), (520, 440), 2, True)]
-lmao2 = [LinearDot((472, 440), (416, 440), 2, True), LinearDot((416, 488), (472, 488), 2, True), LinearDot((472, 536), (416, 536), 2, True)]
-lmao3 = [LinearDot((520, 592), (520, 536), 2, False), LinearDot((568, 536), (568, 592), 2, False), LinearDot((616, 592), (616, 536), 2, False), LinearDot((664, 536), (664, 592), 2, False), LinearDot((712, 592), (712, 536), 2, False)]
-lmao4 = [LinearDot((760, 440), (816, 440), 2, True), LinearDot((816, 488), (760, 488), 2, True), LinearDot((760, 536), (816, 536), 2, True)]
-lmao5 = [LinearDot((712, 296), (656, 296), 2, True), LinearDot((656, 344), (712, 344), 2, True), LinearDot((712, 392), (656, 392), 2, True), LinearDot((656, 440), (712, 440), 2, True)]
 
 def redrawWindow():
     global win, p1, map, walls, coins
@@ -60,20 +55,17 @@ def update_dots():
 def load_level(num):
     global level, map, walls, dots, home, p1, end, coins
     level_data = load_map(num)
-    if level_data == None:
+    if level_data is None:
         return False
     level = num
     map = TileMap(level_data['map'], spritesheet)
     walls = level_data['walls']
     dots = level_data['dots']
-    if level == 10:
-        dots = dots + lmao + lmao2 + lmao3 + lmao4 + lmao5
     home = level_data['home']
     end = level_data['end']
     coins = level_data['coins']
     checkpoints = level_data['checkpoints']
     p1.set_level(num, home, end, checkpoints)
-    p1.reset_deaths()
     return True
 
 
@@ -83,9 +75,8 @@ def load_next_level():
 
 
 def play_single(l):
-    global p1, level, run, deaths
+    global p1, level, run, deaths, deathsPrev
     run = True
-    deaths = 0
     clock = pygame.time.Clock()
     p1 = Player(260, 260, 32, 32, (255, 0, 0), 0)
     level = l
@@ -103,6 +94,9 @@ def play_single(l):
         update_dots()
         redrawWindow()
         deaths = p1.get_deaths()
+        if deaths != deathsPrev:
+            deathsPrev = deaths
+            print(deaths)
 
         if keys[pygame.K_ESCAPE]:
             run = False
@@ -116,4 +110,3 @@ def play_single(l):
                     load_level(level-1)
                 if keys[pygame.K_k]:
                     load_next_level()
-                

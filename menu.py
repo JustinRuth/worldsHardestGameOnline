@@ -326,10 +326,10 @@ def main(test: bool = False) -> None:
         width=WINDOW_SIZE[0]
     )
 
-    main_menu.add.button('Single Player', single_player_menu)
-    main_menu.add.button('Multiplayer', multi_player_menu)
-    main_menu.add.button('Settings', settings_menu)
-    main_menu.add.button('Quit', pygame_menu.events.EXIT)
+    main_menu.add.button('Single Player', single_player_menu, cursor=pygame_menu.locals.CURSOR_HAND)
+    main_menu.add.button('Multiplayer', multi_player_menu, cursor=pygame_menu.locals.CURSOR_HAND)
+    main_menu.add.button('Settings', settings_menu, cursor=pygame_menu.locals.CURSOR_HAND)
+    main_menu.add.button('Quit', pygame_menu.events.EXIT, cursor=pygame_menu.locals.CURSOR_HAND)
 
     # -------------------------------------------------------------------------
     # Main loop
