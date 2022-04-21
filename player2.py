@@ -2,7 +2,6 @@ import pygame
 from dot import *
 
 
-
 class Player:
     def __init__(self, x, y, width, height, color, cp):
         self.x = x
@@ -136,7 +135,7 @@ class Player:
     def check_level_complete(self):
         count = 0
         for coin in self.coins:
-            if coin.collected == True:
+            if coin.collected is True:
                 count += 1
         if count == len(self.coins) and self.rect.colliderect(self.end):
             return True

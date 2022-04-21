@@ -7,12 +7,14 @@ from load import load_map
 from spritesheet import Spritesheet
 from tiles import *
 
+pygame.init()
 width = 1280
 height = 720
 canvas = pygame.Surface((width, height))
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 spritesheet = Spritesheet('spritesheet.png')
+font = pygame.font.SysFont('rogfontsv16regular', 36)
 
 p1 = None
 level = -1
@@ -28,7 +30,7 @@ deathsPrev = 0
 
 
 def redrawWindow():
-    global win, p1, map, walls, coins
+    global win, p1, map, walls, coins, font, deaths, level
     win.fill((180, 181, 254))
     canvas.fill((180, 181, 254))
     map.draw_map(canvas)
@@ -39,6 +41,9 @@ def redrawWindow():
         coin.draw(win)
     for dot in dots:
         dot.draw(win)
+    pygame.draw.rect(win, (0, 0, 0), pygame.Rect(0, 0, 1280, 40))
+    win.blit(font.render(f"Deaths: {deaths}", False, (255, 255, 255)), (1075, -14))
+    win.blit(font.render(f"{level} / 10", False, (255, 255, 255)), (600, -14))
     p1.draw(win)
     pygame.display.update()
 
@@ -66,12 +71,8 @@ def load_level(num):
     coins = level_data['coins']
     checkpoints = level_data['checkpoints']
     p1.set_level(num, home, end, checkpoints)
+    pygame.time.delay(250)
     return True
-
-
-def load_next_level():
-    global level
-    load_level(level+1)
 
 
 def play_single(l):
@@ -89,8 +90,8 @@ def play_single(l):
             clock.tick(60)
         lc = p1.move(walls, dots, coins)
         if lc:
-            print('lc')
-            load_next_level()
+            if load_level(level+1):
+                print('lc')
         update_dots()
         redrawWindow()
         deaths = p1.get_deaths()
@@ -109,4 +110,4 @@ def play_single(l):
                 if keys[pygame.K_j]:
                     load_level(level-1)
                 if keys[pygame.K_k]:
-                    load_next_level()
+                    load_level(level+1)

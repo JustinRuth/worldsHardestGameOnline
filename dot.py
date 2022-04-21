@@ -47,8 +47,6 @@ class LinearDot(Dot):
                 self.direction = False
         self.speed = speed
 
-
-
     def move(self):
         if self.orientation:
             if self.direction:
@@ -72,6 +70,7 @@ class LinearDot(Dot):
                     self.update_pos(self.x, self.y-self.speed)
                 else:
                     self.direction = True
+
 
 class PathDot(Dot):
     def __init__(self, current_pos, tl_pos, br_pos, speed, direction, ReturnDir):
@@ -151,6 +150,7 @@ class PathDot(Dot):
                 if self.y >= self.br_pos[1]:
                     self.cycle -= 1
                     self.y = self.br_pos[1]
+
 
 class SpinDotParent():
     def __init__(self, pos, speed, length, separation, offset, center):
