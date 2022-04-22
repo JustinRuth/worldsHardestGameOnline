@@ -26,7 +26,6 @@ end = ()
 coins = []
 run = True
 deaths = 0
-deathsPrev = 0
 
 
 def redrawWindow():
@@ -42,6 +41,7 @@ def redrawWindow():
     for dot in dots:
         dot.draw(win)
     pygame.draw.rect(win, (0, 0, 0), pygame.Rect(0, 0, 1280, 40))
+    win.blit(font.render("Exit", False, (255, 255, 255)), (10, -14))
     win.blit(font.render(f"Deaths: {deaths}", False, (255, 255, 255)), (1075, -14))
     win.blit(font.render(f"{level} / 10", False, (255, 255, 255)), (600, -14))
     p1.draw(win)
@@ -70,44 +70,35 @@ def load_level(num):
     end = level_data['end']
     coins = level_data['coins']
     checkpoints = level_data['checkpoints']
-    p1.set_level(num, home, end, checkpoints)
+    p1.set_level(num, walls, dots, coins, home, end, checkpoints)
     pygame.time.delay(250)
     return True
 
 
 def play_single(l):
-    global p1, level, run, deaths, deathsPrev
+    global p1, level, run, deaths
     run = True
     clock = pygame.time.Clock()
     p1 = Player(260, 260, 32, 32, (255, 0, 0), 0)
     level = l
     load_level(level)
     while run:
+        clock.tick(60)
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_b]:
-            clock.tick(15)
-        else:
-            clock.tick(60)
-        lc = p1.move(walls, dots, coins)
-        if lc:
+        if p1.move():
             if load_level(level+1):
                 print('lc')
+        deaths = p1.get_deaths()
         update_dots()
         redrawWindow()
-        deaths = p1.get_deaths()
-        if deaths != deathsPrev:
-            deathsPrev = deaths
-            print(deaths)
 
         if keys[pygame.K_ESCAPE]:
             run = False
 
+        mouse = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                pygame.quit()
-            elif event.type == pygame.KEYUP:
-                if keys[pygame.K_j]:
-                    load_level(level-1)
-                if keys[pygame.K_k]:
-                    load_level(level+1)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 0 <= mouse[0] <= 90 and 0 <= mouse[1] <= 40:
+                    run = False

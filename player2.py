@@ -15,9 +15,12 @@ class Player:
         self.home = (x, y)
         self.level = 1
         self.end = None
+        self.objects = []
+        self.dots = []
         self.coins = []
         self.checkpoints = []
         self.deaths = 0
+        self.disable = False
 
     def draw(self, win):
         pygame.draw.rect(win, (0, 0, 0), self.rect)
@@ -32,16 +35,15 @@ class Player:
                 collisions.append(obj)
         return collisions
 
-    def move(self, objects, dots, coins):
-        self.coins = coins
+    def move(self):
         keys = pygame.key.get_pressed()
         self.horizontal_movement(keys)
-        self.check_collision_x(objects, keys)
+        self.check_collision_x(keys)
         self.vertical_movement(keys)
-        self.check_collision_y(objects, keys)
+        self.check_collision_y(keys)
         self.check_collision_checkpoints()
         self.check_collision_coins()
-        self.check_collision_dots(dots)
+        self.check_collision_dots()
         self.update()
         return self.check_level_complete()
 
@@ -63,41 +65,35 @@ class Player:
 
         self.update()
 
-    def check_collision_x(self, objects, keys):
-        collisions = self.get_collisions(objects)
+    def check_collision_x(self, keys):
+        collisions = self.get_collisions(self.objects)
         for obj in collisions:
             if keys[pygame.K_LEFT]:
                 self.x = obj.x + obj.width
             elif keys[pygame.K_RIGHT]:
                 self.x = obj.x - self.width
 
-    def check_collision_y(self, objects, keys):
-        collisions = self.get_collisions(objects)
+    def check_collision_y(self, keys):
+        collisions = self.get_collisions(self.objects)
         for obj in collisions:
             if keys[pygame.K_UP]:
                 self.y = obj.y + obj.height
             elif keys[pygame.K_DOWN]:
                 self.y = obj.y - self.height
 
-    def check_collision_dots(self, dots):
-        for dot in dots:
+    def check_collision_dots(self):
+        for dot in self.dots:
             if isinstance(dot, SpinDotParent):
                 if self.check_collision_spindots(dot.dots):
                     break
             elif self.rect.colliderect(dot.hitbox):
-                self.x = self.home[0]
-                self.y = self.home[1]
-                self.reset_coins()
-                self.deaths += 1
+                self.kill()
                 break
 
     def check_collision_spindots(self, dots):
         for dot in dots:
             if self.rect.colliderect(dot.hitbox):
-                self.x = self.home[0]
-                self.y = self.home[1]
-                self.reset_coins()
-                self.deaths += 1
+                self.kill()
                 return True
         return False
 
@@ -112,8 +108,11 @@ class Player:
                 self.home = cp[1]
                 cp = (cp[0], cp[1], True)
 
-    def set_level(self, level, home, end, cp):
+    def set_level(self, level, objects, dots, coins, home, end, cp):
         self.level = level
+        self.objects = objects
+        self.dots = dots
+        self.coins = coins
         self.home = home
         self.end = end
         self.checkpoints = cp
@@ -141,6 +140,12 @@ class Player:
             return True
         else:
             return False
+
+    def kill(self):
+        self.x = self.home[0]
+        self.y = self.home[1]
+        self.reset_coins()
+        self.deaths += 1
 
     def reset_deaths(self):
         self.deaths = 0

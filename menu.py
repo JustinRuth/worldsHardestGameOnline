@@ -14,7 +14,6 @@ from pygame_menu.examples import create_example_window
 
 from typing import Tuple, Optional
 
-import client
 import client_single
 import client_multi
 # Constants and global variables
@@ -240,7 +239,6 @@ def main(test: bool = False) -> None:
         global level
         client_single.play_single(level)
 
-
     single_player_menu.add.button(
         'Play',
         play_single,
@@ -326,16 +324,16 @@ def main(test: bool = False) -> None:
         width=WINDOW_SIZE[0]
     )
 
-    main_menu.add.button('Single Player', single_player_menu, cursor=pygame_menu.locals.CURSOR_HAND)
-    main_menu.add.button('Multiplayer', multi_player_menu, cursor=pygame_menu.locals.CURSOR_HAND)
-    main_menu.add.button('Settings', settings_menu, cursor=pygame_menu.locals.CURSOR_HAND)
-    main_menu.add.button('Quit', pygame_menu.events.EXIT, cursor=pygame_menu.locals.CURSOR_HAND)
+    main_menu.add.button('Single Player', single_player_menu)
+    main_menu.add.vertical_margin(25)
+    main_menu.add.button('Multiplayer', multi_player_menu)
+    main_menu.add.vertical_margin(25)
+    main_menu.add.button('Quit', pygame_menu.events.EXIT)
 
     # -------------------------------------------------------------------------
     # Main loop
     # -------------------------------------------------------------------------
     while True:
-
         # Tick
         clock.tick(FPS)
 
