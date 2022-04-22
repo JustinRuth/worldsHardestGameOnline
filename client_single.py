@@ -86,7 +86,7 @@ def play_single(l):
         clock.tick(60)
         keys = pygame.key.get_pressed()
         if p1.move():
-            if load_level(level+1):
+            if not load_level(level+1):# Game Complete
                 print('lc')
         deaths = p1.get_deaths()
         update_dots()
