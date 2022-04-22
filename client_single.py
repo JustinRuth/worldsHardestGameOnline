@@ -14,7 +14,7 @@ canvas = pygame.Surface((width, height))
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 spritesheet = Spritesheet('spritesheet.png')
-font = pygame.font.Font('ROGFontsv1.6-Regular.ttf', 36)
+font = pygame.font.Font('fonts/ROGFontsv1.6-Regular.ttf', 36)
 
 p1 = None
 level = -1

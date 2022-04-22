@@ -71,7 +71,7 @@ def set_map(num):
     # cp = [(pygame.Rect(592, 416, 96, 96), (624, 448), False)]
     cp = []
 
-    with open(os.path.join(f'level{num}.csv')) as data:
+    with open(os.path.join(f'levels/level{num}.csv')) as data:
         data = csv.reader(data, delimiter=',')
         for row in data:
             map.append(list(row))
@@ -79,14 +79,14 @@ def set_map(num):
     data = {'map': map, 'walls': walls, 'home': home, 'dots': dots, 'end': end, 'coins': coins, 'checkpoints': cp}
     # data = load_map(num)
     # data['checkpoints'] = cp
-    with open(f'level{num}.pkl', 'wb') as f:
+    with open(f'levels/level{num}.pkl', 'wb') as f:
         data = pickle.dump(data, f, -1)
     f.close()
 
 
 def load_map(num):
     try:
-        with open('level'+str(num)+'.pkl', 'rb') as f:
+        with open('levels/level'+str(num)+'.pkl', 'rb') as f:
             data = pickle.load(f)
         f.close()
         return data
