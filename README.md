@@ -7,4 +7,4 @@ Server Code Tutorial
 https://youtu.be/McoDjOCb2Zo
 
 EXE Download Link
-https://drive.google.com/file/d/1YEMJHxf6LF3KTSpiRDLoLN4yETOauesF/view?usp=sharing
+https://drive.google.com/file/d/1J61zm37f0Dw15yJs-QQSvugGZ3VkMjmf/view?usp=sharing
