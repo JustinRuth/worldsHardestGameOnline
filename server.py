@@ -30,7 +30,7 @@ games = []
 
 def make_new_player(cp):
     """Makes a new player object at random position with a random color"""
-    return [260, 260, 1, cp]
+    return [260, 260, 1, cp, 0]
     # return Player(260, 260, 32, 32, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), cp)
 
 

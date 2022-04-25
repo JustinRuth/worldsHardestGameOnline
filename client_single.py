@@ -40,6 +40,7 @@ def redrawWindow():
     for dot in dots:
         dot.draw(win)
     pygame.draw.rect(win, (0, 0, 0), pygame.Rect(0, 0, 1280, 40))
+    pygame.draw.rect(win, (0, 0, 0), pygame.Rect(0, 680, 1280, 40))
     win.blit(font.render("Exit", False, (255, 255, 255)), (10, -14))
     win.blit(font.render(f"Deaths: {deaths}", False, (255, 255, 255)), (1075, -14))
     win.blit(font.render(f"{level} / 10", False, (255, 255, 255)), (600, -14))
