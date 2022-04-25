@@ -61,11 +61,14 @@ def redrawWindow():
         coin.draw(win)
     for dot in dots:
         dot.draw(win)
-    for player in players:
+    print(f'Players: {players}')
+    for index, player in enumerate(players):
         if not player[3] == p1.current_player:
+            pygame.draw.rect(win, (0, 0, 0), pygame.Rect(1045, (index+1)*40, 1280, 40))
             if player[2] == p1.level:
                 pygame.draw.rect(win, (0, 0, 0), pygame.Rect(player[0], player[1], 32, 32))
                 pygame.draw.rect(win, (0, 0, 255), pygame.Rect(player[0]+6, player[1]+6, 20, 20))
+                win.blit(font.render(f"Player {player[3]}: {player[4]}", False, (255, 255, 255)), (1054, -14+((index+1)*40)))
     pygame.draw.rect(win, (0, 0, 0), pygame.Rect(0, 0, 1280, 40))
     pygame.draw.rect(win, (0, 0, 0), pygame.Rect(0, 680, 1280, 40))
     win.blit(font.render("Exit", False, (255, 255, 255)), (10, -14))
@@ -77,11 +80,11 @@ def redrawWindow():
 
 
 def update_players(clock):
-    global p1, players, run
+    global p1, players, run, level, deaths
     while run:
         clock.tick(60)
         try:
-            data = [p1.x, p1.y, level, p1.current_player]
+            data = [p1.x, p1.y, level, p1.current_player, deaths]
             players = n.send(data)
         except Exception as e:
             print(f'Error: {e}')
@@ -128,7 +131,7 @@ def play_multi():
         keys = pygame.key.get_pressed()
         if p1.move():
             if not load_level(level+1):# Game Complete
-                return {'deaths': deaths}
+                load_level(1)
         deaths = p1.get_deaths()
         update_dots()
         redrawWindow()
