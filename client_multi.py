@@ -61,7 +61,7 @@ def redrawWindow():
         coin.draw(win)
     for dot in dots:
         dot.draw(win)
-    print(f'Players: {players}')
+    # print(f'Players: {players}')
     for index, player in enumerate(players):
         if not player[3] == p1.current_player:
             pygame.draw.rect(win, (0, 0, 0), pygame.Rect(1045, (index+1)*40, 1280, 40))
