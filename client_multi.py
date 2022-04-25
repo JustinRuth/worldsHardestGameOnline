@@ -128,7 +128,7 @@ def play_multi():
         keys = pygame.key.get_pressed()
         if p1.move():
             if not load_level(level+1):# Game Complete
-                return {'deaths': deaths}
+                load_level(1)
         deaths = p1.get_deaths()
         update_dots()
         redrawWindow()
