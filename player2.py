@@ -1,7 +1,6 @@
 import pygame
 from dot import *
 
-
 class Player:
     def __init__(self, x, y, width, height, color, cp):
         self.x = x
@@ -152,3 +151,6 @@ class Player:
 
     def get_deaths(self):
         return self.deaths
+
+    def set_color(self, color):
+        self.color = color

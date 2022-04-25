@@ -1,5 +1,4 @@
 import pygame
-import pygame_menu
 from player2 import Player
 from dot import *
 from coin import *
@@ -87,7 +86,7 @@ def play_single(l):
         keys = pygame.key.get_pressed()
         if p1.move():
             if not load_level(level+1):# Game Complete
-                print('lc')
+                return {'deaths': deaths}
         deaths = p1.get_deaths()
         update_dots()
         redrawWindow()

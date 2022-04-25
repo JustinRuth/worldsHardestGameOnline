@@ -11,17 +11,19 @@ class Network:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = "45.56.111.95"
         # self.server = server
-        self.port = 5555
+        self.port = 55555
         self.addr = (self.server, self.port)
-        self.p = self.connect()
+        self.p = None
 
-    def getP(self):
+    def getP(self, type):
+        self.p = self.connect(type)
         return self.p
 
-    def connect(self):
+    def connect(self, type):
         """Connects to Server and Returns Server Message"""
         try:
             self.client.connect(self.addr)
+            self.client.send(pickle.dumps(type))
             return pickle.loads(self.client.recv(4096))
         except socket.error as e:
             print(e)

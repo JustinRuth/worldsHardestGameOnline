@@ -237,7 +237,9 @@ def main(test: bool = False) -> None:
 
     def play_single() -> None:
         global level
-        client_single.play_single(level)
+        data = client_single.play_single(level)
+        if data:
+            pygame_menu.sp_finished_menu()
 
     single_player_menu.add.button(
         'Play',
@@ -282,6 +284,29 @@ def main(test: bool = False) -> None:
     )
 
     # -------------------------------------------------------------------------
+    # Create menus: Single Player Finished
+    # -------------------------------------------------------------------------
+    sp_finished_menu = pygame_menu.Menu(
+        height=WINDOW_SIZE[1],
+        theme=settings_menu_theme,
+        title='Multiplayer',
+        width=WINDOW_SIZE[0]
+    )
+
+    sp_finished_menu.add.button(
+        'Play Again',
+        single_player_menu,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+
+    sp_finished_menu.add.vertical_margin(50)
+    sp_finished_menu.add.button(
+        'Return to main menu',
+        pygame_menu.events.BACK,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+
+    # -------------------------------------------------------------------------
     # Create menus: Multiplayer
     # -------------------------------------------------------------------------
     multi_player_menu = pygame_menu.Menu(
@@ -291,13 +316,37 @@ def main(test: bool = False) -> None:
         width=WINDOW_SIZE[0]
     )
 
-    def play_multi() -> None:
+    def join() -> None:
         global level
+        data = multi_player_menu.get_input_data()
+        code = data['code']
+        if code:
+            client_multi.set_network(['join', code])
+            client_multi.play_multi()
+
+    def host() -> None:
+        global level
+        client_multi.set_network('host')
         client_multi.play_multi()
 
     multi_player_menu.add.button(
-        'Play',
-        play_multi,
+        'Host',
+        host,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+    multi_player_menu.add.vertical_margin(50)
+    multi_player_menu.add.text_input(
+        'Lobby Code: ',
+        maxchar=6,
+        maxwidth=6,
+        textinput_id='code',
+        input_type=pygame_menu.locals.INPUT_INT,
+        cursor_selection_enable=False,
+        align=pygame_menu.locals.ALIGN_CENTER
+    )
+    multi_player_menu.add.button(
+        'Join',
+        join,
         align=pygame_menu.locals.ALIGN_CENTER
     )
 
@@ -328,6 +377,7 @@ def main(test: bool = False) -> None:
     main_menu.add.vertical_margin(25)
     main_menu.add.button('Multiplayer', multi_player_menu)
     main_menu.add.vertical_margin(25)
+    # main_menu.add.button('bruh', settings_menu)
     main_menu.add.button('Quit', pygame_menu.events.EXIT)
 
     # -------------------------------------------------------------------------
