@@ -12,7 +12,7 @@ class Coin:
         self.collected = False
 
     def draw(self, win):
-        """Draws Dot object to Screen"""
+        """Draws Coin object to Screen"""
         if not self.collected:
             pygame.draw.circle(win, self.color1, (self.x, self.y), self.radius)
             pygame.draw.circle(win, self.color2, (self.x, self.y), (self.radius/2)+1)
