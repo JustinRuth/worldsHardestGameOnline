@@ -18,7 +18,7 @@ import client_single
 import client_multi
 # Constants and global variables
 FPS = 60
-WINDOW_SIZE = (1280, 720)
+WINDOW_SIZE = (1280, 720)jdfal
 
 sound: Optional['pygame_menu.sound.Sound'] = None
 surface: Optional['pygame.Surface'] = None
